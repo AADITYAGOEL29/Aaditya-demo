@@ -1,3 +1,9 @@
-# Aaditya-demo
-This is my first git repsitory
-Author- Aaditya Goel
+# TODO APP
+
+## Frontend
+- React JS
+
+
+
+## Backend
+- Node JS (Express Js)
