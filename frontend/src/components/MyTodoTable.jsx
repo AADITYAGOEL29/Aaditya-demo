@@ -1,34 +1,50 @@
 import React from 'react'
 
-const MyTodoTable = () => {
+const MyTodoTable = ({ todos, onDelete, onToggleStatus }) => {
+
   return (
-     <table className='my-todo-table'>
-          <thead>
-            <tr>
-              <th>Title of Task</th>
-              <th>Status of Task</th>
-              <th>Button</th>
-            </tr>
-          </thead>
+    <table border="1" cellPadding="10">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Task</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
 
-          <tbody>
-            <tr>
-              <td>Complete Backend API</td>
-              <td>Pending</td>
-              <td>
-                <button>Mark Done</button>
-              </td>
-            </tr>
+      <tbody>
+        {todos.map((todo) => (
+          <tr key={todo.id}>
 
-            <tr>
-              <td>Design Frontend</td>
-              <td>Completed</td>
-              <td>
-                <button>Delete</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+            <td>{todo.id}</td>
+
+            <td>{todo.title}</td>
+
+            <td>
+              {todo.completed ? "Completed" : "Pending"}
+            </td>
+
+            <td>
+
+              <button
+                onClick={() => onToggleStatus(todo)}
+              >
+                Toggle Status
+              </button>
+
+              <button
+                onClick={() => onDelete(todo.id)}
+              >
+                Delete
+              </button>
+
+            </td>
+
+          </tr>
+        ))}
+      </tbody>
+    </table>
   )
 }
 
