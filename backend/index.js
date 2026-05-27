@@ -39,16 +39,21 @@ app.get('/todos', async (req, res) => {
 // ADD TODO
 // ==============================
 app.post('/todos', async (req, res) => {
-  const { title } = req.body;
+  try {
+    const { title } = req.body;
 
-  const newTodo = new Todo({
-    title,
-    completed: false
-  });
+    const newTodo = new Todo({
+      title,
+      completed: false
+    });
 
-  await newTodo.save();
+    await newTodo.save();
 
-  res.status(201).json(newTodo);
+    res.status(201).json(newTodo);
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 
