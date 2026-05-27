@@ -24,40 +24,31 @@ const App = () => {
   }, [])
 
     // ADD TODO
-  const handleAddTask = async () => {
-
-    if (!newTask.trim()) {
-      return
-    }
-
-    try {
-
-      const response = await fetch('http://localhost:3000/todos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          title: newTask
-        })
-      })
-
-      const data = await response.json()
-
-      // Update UI instantly
-      setTodos((prevTodos) => [
-        ...prevTodos,
-        data.todo
-      ])
-
-      // Clear input
-      setNewTask("")
-
-    } catch (error) {
-      console.error("Failed to add task:", error)
-    }
-  }
-
+    const handleAddTask = async () => {
+      if (!newTask.trim()) {
+        return;
+      }
+    
+      try {
+        const response = await fetch('http://localhost:3000/todos', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title: newTask,
+          }),
+        });
+    
+        const data = await response.json();
+    
+        setTodos([...todos, data]);
+    
+        setNewTask('');
+      } catch (error) {
+        console.error('Error adding task:', error);
+      }
+    };
 
 
     // Delete Todo
@@ -71,7 +62,10 @@ const App = () => {
 
       // Remove from UI instantly
       setTodos((prevTodos) =>
-        prevTodos.filter(todo => todo.id !== id)
+        prevTodos.filter(
+          (todo) => todo._id !== id && todo.id !== id
+        )
+      
       )
 
     } catch (error) {
@@ -80,35 +74,19 @@ const App = () => {
   }
 
     // TOGGLE STATUS
-  const handleToggleStatus = async (todo) => {
-
-    try {
-
-      const updatedTodo = {
-        completed: !todo.completed
-      }
-
-      await fetch(`http://localhost:3000/todos/${todo.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updatedTodo)
-      })
-
-      // Update UI instantly
-      setTodos((prevTodos) =>
-        prevTodos.map((t) =>
-          t.id === todo.id
-            ? { ...t, completed: !t.completed }
-            : t
-        )
-      )
-
-    } catch (error) {
-      console.error("Status update failed:", error)
-    }
-  }
+    const handleToggleStatus = async (id) => {
+      const updatedTodos = todos.map((todo) => {
+        if (todo._id === id || todo.id === id) {
+          return {
+            ...todo,
+            completed: !todo.completed,
+          };
+        }
+        return todo;
+      });
+    
+      setTodos(updatedTodos);
+    };
 
 
 

@@ -28,13 +28,13 @@ const MyTodoTable = ({ todos, onDelete, onToggleStatus }) => {
             <td>
 
               <button
-                onClick={() => onToggleStatus(todo)}
+                onClick={() => onToggleStatus(todo._id || todo.id)}
               >
                 Toggle Status
               </button>
 
               <button
-                onClick={() => onDelete(todo.id)}
+                onClick={() => onDelete(todo._id || todo.id)}
               >
                 Delete
               </button>

@@ -1,3 +1,11 @@
+const mongoose = require("mongoose");
+
+mongoose.connect(
+  "mongodb+srv://aadityagoel:aadityagoel29@cluster0.umc71jx.mongodb.net/todoDB?retryWrites=true&w=majority"
+)
+.then(() => console.log("MongoDB Connected"))
+.catch((err) => console.log(err));
+
 const express = require('express');
 const cors = require('cors');
 
@@ -9,30 +17,20 @@ app.use(express.json());
 app.use(cors());
 
 
-let todos = [
-  {
-    id: 1,
-    title: "Learn Express",
-    completed: false
-  },
-  {
-    id: 2,
-    title: "Learn React",
-    completed: true
-  },
-  {
-    id: 3,
-    title: "Learn Spanish",
-    completed: false
-  }
-];
 
+const TodoSchema = new mongoose.Schema({
+  title: String,
+  completed: Boolean,
+});
+
+const Todo = mongoose.model("Todo", TodoSchema);
 
 // ==============================
 // GET ALL TODOS
 // ==============================
-app.get('/todos', (req, res) => {
-  res.status(200).json(todos);
+app.get('/todos', async (req, res) => {
+  const todos = await Todo.find();
+  res.json(todos);
 });
 
 
@@ -40,27 +38,17 @@ app.get('/todos', (req, res) => {
 // ==============================
 // ADD TODO
 // ==============================
-app.post('/todos', (req, res) => {
+app.post('/todos', async (req, res) => {
   const { title } = req.body;
 
-  if (!title) {
-    return res.status(400).json({
-      message: "Title is required"
-    });
-  }
-
-  const newTodo = {
-    id: Date.now(),
+  const newTodo = new Todo({
     title,
     completed: false
-  };
-
-  todos.push(newTodo);
-
-  res.status(201).json({
-    message: "Todo created",
-    todo: newTodo
   });
+
+  await newTodo.save();
+
+  res.status(201).json(newTodo);
 });
 
 
@@ -99,20 +87,10 @@ app.patch('/todos/:id', (req, res) => {
 // ==============================
 // DELETE TODO
 // ==============================
-app.delete('/todos/:id', (req, res) => {
-  const id = parseInt(req.params.id);
+app.delete('/todos/:id', async (req, res) => {
+  await Todo.findByIdAndDelete(req.params.id);
 
-  const todoExists = todos.some(t => t.id === id);
-
-  if (!todoExists) {
-    return res.status(404).json({
-      message: "Todo not found"
-    });
-  }
-
-  todos = todos.filter(t => t.id !== id);
-
-  res.status(200).json({
+  res.json({
     message: "Todo deleted"
   });
 });
