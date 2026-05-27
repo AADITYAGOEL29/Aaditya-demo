@@ -13,7 +13,7 @@ const App = () => {
 
   // Fetch data from backend
   useEffect(() => {
-    fetch('http://localhost:3000/todos')
+    fetch('https://aaditya-demo.onrender.com/todos')
       .then((response) => response.json())
       .then((data) => {
         setTodos(data)
@@ -30,7 +30,7 @@ const App = () => {
       }
     
       try {
-        const response = await fetch('http://localhost:3000/todos', {
+        const response = await fetch('https://aaditya-demo.onrender.com/todos', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ const App = () => {
 
     try {
 
-      await fetch(`http://localhost:3000/todos/${id}`, {
+      await fetch(`https://aaditya-demo.onrender.com/todos/${id}`, {
         method: 'DELETE'
       })
 
